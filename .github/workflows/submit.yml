@@ -1,0 +1,38 @@
+name: submit
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    env:
+      # ---- EDIT THESE THREE VALUES before pushing -------------------------
+      APPLICANT_NAME: "Mihailo Cvetković"
+      APPLICANT_EMAIL: "mihailocvetkovic2@gmail.com"
+      RESUME_LINK: "auto"  # auto-links Mihailo_Cvetkovic_CV_2026.pdf committed in this repo
+      # repository_link and action_run_link are derived automatically from
+      # GITHUB_SERVER_URL / GITHUB_REPOSITORY / GITHUB_RUN_ID at runtime.
+      # ---------------------------------------------------------------------
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Guard against unfilled placeholders
+        run: |
+          if printf '%s\n' "$APPLICANT_EMAIL" "$RESUME_LINK" | grep -q 'REPLACE_'; then
+            echo "::error::Fill in APPLICANT_EMAIL and RESUME_LINK in .github/workflows/submit.yml before pushing."
+            exit 1
+          fi
+
+      - name: Verify signing (offline self-test)
+        run: python test_apply.py
+
+      - name: Sub
