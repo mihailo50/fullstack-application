@@ -31,12 +31,13 @@ RESUME_FILENAME = "Mihailo_Cvetkovic_CV_2026.pdf"
 
 
 def canonical_body(payload: dict) -> bytes:
-    """Return the payload as compact, key-sorted, UTF-8 JSON (no extra whitespace)."""
+    """Return the payload as compact, key-sorted JSON with non-ASCII escaped.
+    """
     return json.dumps(
         payload,
         sort_keys=True,
         separators=(",", ":"),
-        ensure_ascii=False,
+        ensure_ascii=True,
     ).encode("utf-8")
 
 
