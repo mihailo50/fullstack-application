@@ -35,4 +35,5 @@ jobs:
       - name: Verify signing (offline self-test)
         run: python test_apply.py
 
-      - name: Sub
+      - name: Submit application
+        run: python apply.py
